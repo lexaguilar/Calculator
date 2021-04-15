@@ -1,0 +1,17 @@
+﻿@model Calculator.Models.Inss
+@{
+    ViewData["Title"] = "Calcular impuestos";
+}
+
+<div class="">
+    <h4>% INSS</h4>  
+    <form asp-action="index" asp-controller="inss" class="form-group" method="POST">
+        <div class="form-group">
+            <label for="salarioMensual">Salario mensual</label>
+            <input asp-for="Value" class="form-control" placeholder="0.00"/>
+            <input type="hidden" asp-for="Id">
+        </div>
+        <button id="btn-calculateTax" type="submit" class="btn btn-primary">Guardar</button>
+    </form >
+    <a asp-controller="home" asp-action="index">Regresar</a>
+</div>

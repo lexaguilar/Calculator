@@ -1,8 +1,44 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Calculator.Models.Tax>
+@{
+    ViewData["Title"] = "Calcular impuestos";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="">
+    <h4>Calcular impuestos</h4>
+    <form asp-action="index" asp-controller="home" class="form-group" method="POST">
+        <div class="form-group">
+            <label for="salarioMensual">Salario mensual</label>
+            <input name="salary" class="form-control" value="@ViewBag.Salary" id="salary" placeholder="0.00"/>
+            <small id="salarioMensual" class="form-text text-muted">El inss se calculará en base a <span>@ViewBag.Inss.Value</span>%. puede configurar el impuesto aquí <a asp-controller="inss" asp-action="index" id="config">Configuración</a></small>
+        </div>
+        <button id="btn-calculateTax" type="submit" class="btn btn-primary">Calcular impuestos</button>
+    </form >
+    <table class="table table-hover table-anual">
+        <thead>
+            <tr>
+                <th>Frecuencia</th>
+                <th class="text-right">Salario</th>
+                <th class="text-right">Deduccion INSS</th>
+                <th class="text-right">Deduccion IR</th>
+                <th class="text-right">Sueldo Neto</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if(Model != null){
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="">@item.Type</td>
+                            <td class="text-right">@item.Salary.GetFormaTMoney()</td>
+                            <td class="text-right">@item.Inss.GetFormaTMoney()</td>
+                            <td class="text-right">@item.IR.GetFormaTMoney()</td>
+                            <td class="text-right">@item.Neto.GetFormaTMoney()</td>
+                        </tr>
+                    }
+                   
+                }
+            }
+        </tbody>
+    </table>
 </div>

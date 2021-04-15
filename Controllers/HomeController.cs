@@ -6,32 +6,47 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Calculator.Models;
+using Calculator.Services;
 
 namespace Calculator.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private ICalculatorServices<Tax> _service;
+        private ITaxServices<IR> _taxService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ICalculatorServices<Tax> service, ITaxServices<IR> taxService)
         {
             _logger = logger;
+            _service = service;
+            _taxService = taxService;
         }
 
         public IActionResult Index()
-        {
+        {           
+
+            ViewBag.Salary = 0M;
+            ViewBag.Inss = _taxService.GetInss();
+
             return View();
+
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        public IActionResult Index(decimal salary)
         {
-            return View();
-        }
+           
+            ViewBag.Salary = salary;
+            ViewBag.Inss = _taxService.GetInss();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var newTax = _service.Calculate(salary);
+            var newTaxMonthly = _service.CalculateMonthly(newTax);
+
+            Tax[] Taxs = { newTax, newTaxMonthly };
+
+            return View(Taxs);
+
         }
     }
 }

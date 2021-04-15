@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Calculator.Models.IR>
+@{
+    ViewData["Title"] = "Calcular impuestos";
+}
+
+<div class="">
+    <h4>Tabla IR</h4>  
+    <table class="table table-hover table-anual">
+        <thead>
+            <tr>
+                <th class="text-right">Desde</th>
+                <th class="text-right">Hasta</th>
+                <th class="text-right">Impuesto Base</th>
+                <th class="text-right">Porcentaje de aplicacion</th>
+                <th class="text-right">Sobre Exceso de</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-right">@item.From.GetFormaTMoney()</td>
+                    <td class="text-right">@item.To.GetFormaTMoney()</td>
+                    <td class="text-right">@item.Base.GetFormaTMoney()</td>
+                    <td class="text-right">@((item.Percent * 100).GetFormaTMoney())%</td>
+                    <td class="text-right">@item.Excess.GetFormaTMoney()</td>
+                </tr>
+            }}
+        </tbody>
+    </table>
+</div>
